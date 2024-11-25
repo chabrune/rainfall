@@ -1,3 +1,5 @@
+# Main
+```
 (gdb) disas main
 Dump of assembler code for function main:
    0x08048ec0 <+0>:     push   %ebp
@@ -48,9 +50,10 @@ Dump of assembler code for function main:
    0x08048f7b <+187>:   call   0x804a230 <fwrite>
    0x08048f80 <+192>:   mov    $0x0,%eax
    0x08048f85 <+197>:   leave  
-   0x08048f86 <+198>:   ret    
+   0x08048f86 <+198>:   ret
+```
 
-Explication
+# Explication
 
 main<+0>:     push   %ebp
 Push EBP sur la stack pour save la base de l'ancienne function stackframe
