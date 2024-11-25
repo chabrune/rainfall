@@ -36,7 +36,7 @@ Dump of assembler code for function run:
 
 `main<+0-+3>:`
 
-preparation de des registres et de la stack
+preparation des registres et de la stack
 
 `main<+6>:     sub    $0x50,%esp`
 
@@ -59,7 +59,7 @@ call gets qui va remplir notre buf avec stdin
 
 `run<+0-+3>:`
 
-preparation de des registres et de la stack
+preparation des registres et de la stack
 
 `run<+6-+38>:`
 
