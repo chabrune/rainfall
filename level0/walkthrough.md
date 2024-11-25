@@ -14,6 +14,7 @@ Ensuite comparaison entre 423 (0x1a7) et le registre eax (le retour de atoi)
 On envoie 423 en parametre au programme
 
 `0x08048ede <+30>:    jne    0x8048f58 <main+152>`
+
 la comparaison sera egale et il n'y aura pas de jump donc les instructions suivantes seront executees
 A savoir un execve("/bin/sh") qui lancera le shell level1 avec le bit SUID
 
@@ -25,4 +26,5 @@ level1
 ```
 
 On est bien passe level1 donc maintenant reste plus qu'a lire le fichier .pass sur le home du level1
+
 `$ cat /home/user/level1/.pass`

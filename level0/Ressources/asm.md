@@ -56,33 +56,43 @@ Dump of assembler code for function main:
 # Explication
 
 `main<+0>:     push   %ebp`
+
 Push EBP sur la stack pour save la base de l'ancienne function stackframe
 
 `main<+1>:     mov    %esp,%ebp`
+
 etablit le nouveau point de base de la frame 
 
 `main<+6>:     sub    $0x20,%esp`
+
 Alloue 32 bytes sur la pile pour les variables locales
 
 `main<+9>:     mov    0xc(%ebp),%eax`
+
 Charge eax avec argv [ebp+0 = old EBP | ebp+4 = retour | ebp+8 = argc | ebp+8 = argv]
 
 `main<+12>:    add    $0x4,%eax`
+
 Ajoute 4 bytes a eax pour argv + 1
 
 `main<+17>:    mov    %eax,(%esp)`
+
 Charge esp avec argv[1]
 
 `main<+20>:    call   0x8049710 <atoi>`
+
 Call de atoi avec comme argument esp donc argv[1]
 
 `main<+25>:    cmp    $0x1a7,%eax`
+
 Comparaison entre argv[1] et 423
 
 `main<+30>:    jne    0x8048f58 <main+152>`
+
 Si la comparaison is not equal jump main+152 sinon va executer execv("/bin/sh")
 
 `main<+197>  leave`
+
 Restaure l'ancien contexte
    - mov %ebp,%esp  - ESP pointe où était EBP
    - pop %ebp       - Récupère l'ancien EBP
