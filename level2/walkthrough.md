@@ -9,6 +9,7 @@ adresse system : `0xb7e6b060`
 Pas bon du tout
 
 strdup : heap retourne une adresse differente de 0xb
+
 adresse return strdup : `0x804a008`
 
 Peut-etre quelque chose a faire avec le retour de strdup ?
@@ -26,6 +27,7 @@ strdup("")                 = 0x0804a008
 
 
 shell code /bin/sh
+
 `http://shell-storm.org/shellcode/files/shellcode-575.html`
 
 Ok donc maintenant qu'on a ce shell code qui fait un appel system de `execve("/bin/sh")`
@@ -37,6 +39,7 @@ On sait qu'on peut faire un BoF avec gets et on sait qu'on doit utiliser le reto
 L'utilisation du heap via strdup() permet de contourner la protection de la stack
 
 On modifie `ebp+4` avec l'adresse de retour de strdup pour que le flux d'execution du retour de la fonction main pointe vers notre shell code
+
 L'execution de code en memoire etant active nous pouvons donc executer le shell code
 
 `ebp+4` etant toujours l'adresse de retour de la frame actuelle
@@ -48,6 +51,7 @@ Il nous faut notre offset pour modifier `ebp+4`
 Offset 80
 
 Niquel, maintenant on sait que notre shell code fait 21
+
 On soustrait 21 a 80 = 59
 
 On aura un padding de 59 bytes apres notre shell code avant d'ecrire l'adresse de retour de strdup
