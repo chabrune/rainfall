@@ -35,27 +35,34 @@ Dump of assembler code for function run:
 # Main function :
 
 `main<+0-+3>:`
+
 preparation de des registres et de la stack
 
 `main<+6>:     sub    $0x50,%esp`
+
 Alloue 80 bytes sur la stack pour le buf
 
 `main<+9>:     lea    0x10(%esp),%eax`
+
 lea = load effective adress
 Charge l'adresse a esp+10 dans eax qui sera notre pointeur buf
 
 `main<+13>:    mov    %eax,(%esp)`
+
 Charge cette adresse dans esp qui prepare le parametre de la fonction gets
 
 `main<+16>:    call   0x8048340 <gets@plt>`
+
 call gets qui va remplir notre buf avec stdin
 
 # Run function :
 
 `run<+0-+3>:`
+
 preparation de des registres et de la stack
 
 `run<+6-+38>:`
+
 prepare les arguments pour fwrite
 fwrite(buf: "Good... Wait what?\n", size: 1, count: 0x13, fp: stdout)
 
@@ -76,12 +83,14 @@ esp+8   = 0x13
 esp+12  = stdout
 ```
 
+`run<+46>:    movl   $0x8048584,(%esp)`
+
 ```
-run<+46>:    movl   $0x8048584,(%esp)
 (gdb) x/s 0x8048584
 0x8048584:       "/bin/sh"
 ```
 charge le pointeur sur string dans esp pour system
 
 `run<+53>:    call   0x8048360 <system@plt>`
+
 call system avec notre param dans esp
