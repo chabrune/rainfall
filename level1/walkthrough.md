@@ -86,4 +86,3 @@ Mais gdb a des protections et cela nous permet pas d'executer le programme avec 
 Donc oblige de passer en ligne de commande ou via un script extern a gdb
 
 cat /home/user/level2/.pass
-53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
