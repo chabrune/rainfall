@@ -28,6 +28,10 @@ C'est un mécanisme de résolution dynamique des liens qui permet :
 De charger les bibliothèques à des adresses variables
 De supporter le `ASLR (Address Space Layout Randomization)`
 
+la vérification de l'adresse commençant par 0xb est en fait une protection similaire à ASLR.
+
+Cette protection empêche l'exploitation directe de la stack en vérifiant si l'adresse de retour pointe vers la stack.
+
 Il est possible d’afficher la mémoire avec la commande x. Cette commande se construit ainsi :
 ```
 x/[nb-bloc][format][bloc-size] [address]

@@ -78,6 +78,7 @@ La fonction fflush sert à vider un buffer (tampon) en mémoire en forçant l'é
 
 
 `p<+19>:    lea    -0x4c(%ebp),%eax`
+
 `p<+22>:    mov    %eax,(%esp)`
 
 prepare le pointeur et le place dans esp pour l'arg de gets
@@ -111,9 +112,13 @@ effectue la comparaison - protection qui verifie si l'adresse de retour pointe v
 si le resultat de la comparaison n'est pas egal alors jump a main+83
 
 `p<+51>:    mov    $0x8048620,%eax`
+
 `p<+56>:    mov    -0xc(%ebp),%edx`
+
 `p<+59>:    mov    %edx,0x4(%esp)`
+
 `p<+63>:    mov    %eax,(%esp)`
+
 `p<+66>:    call   0x80483a0 <printf@plt>`
 
 prepare les arguments pour printf puis call printf
@@ -132,13 +137,16 @@ exit 1
 charge dans eax l'adresse pointee par ebp-4c qui a ete save avant la comparaison avec 0xb
 
 `p<+86>:    mov    %eax,(%esp)`
+
 `p<+89>:    call   0x80483f0 <puts@plt>`
 
 prepare l'arg pour puts
 
 
 `p<+94>:    lea    -0x4c(%ebp),%eax`
+
 `p<+97>:    mov    %eax,(%esp)`
+
 `p<+100>:   call   0x80483e0 <strdup@plt>`
 
 effectue les memes operations pour strdup

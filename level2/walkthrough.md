@@ -5,10 +5,12 @@ On disas et on voit qu'on a un main qui ne fait pas grand chose et qui call la f
 La fonction `p()` verifie si l'adresse de retour contient 0xb
 
 adresse system : `0xb7e6b060`
+
 Pas bon du tout
 
 strdup : heap retourne une adresse differente de 0xb
 adresse return strdup : `0x804a008`
+
 Peut-etre quelque chose a faire avec le retour de strdup ?
 
 ```
@@ -31,6 +33,8 @@ Ok donc maintenant qu'on a ce shell code qui fait un appel system de `execve("/b
 Il va falloir savoir quoi en faire et comment l'exploiter
 
 On sait qu'on peut faire un BoF avec gets et on sait qu'on doit utiliser le retour de strdup sinon le programme rentre dans la comparaison avec 0xb et exit
+
+L'utilisation du heap via strdup() permet de contourner la protection de la stack
 
 On modifie `ebp+4` avec l'adresse de retour de strdup pour que le flux d'execution du retour de la fonction main pointe vers notre shell code
 L'execution de code en memoire etant active nous pouvons donc executer le shell code
