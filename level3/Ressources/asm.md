@@ -66,3 +66,5 @@ call fonction v()
 `v<+26>:    lea    -0x208(%ebp),%eax`
 
 `v<+32>:    mov    %eax,(%esp)`
+
+Preparation de la stack et des arguments pour fgets

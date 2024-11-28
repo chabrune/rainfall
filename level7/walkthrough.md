@@ -16,7 +16,7 @@ fgets( <unfinished ...>
 0x804a038:      0x00004141      0x00000000      0x00000000      0x00020fc1
 
 Variable gloable : 0x8049960
-fgets(var c(globale), n: 68, open(.pass), mode : read)
+fgets(var c(globale), n: 68bytes, open(.pass), mode : read)
 
 puts(08048703  data_8048703: ~~.)
 
@@ -30,4 +30,16 @@ puts(08048703  data_8048703: ~~.)
 0xbffff670:     0x00000000      0x0aae8655      0x3deb2245      0x00000000
 0xbffff680:     0x00000000      0x00000000      0x00000003      0x08048440
 
-Ecrire de 0x0804a038 a 0x8049960
+Ecrire de 0x0804a038 a 0x8049960 Non LOL :D
+
+b *main+202
+
+Pour afficher l'instruction actuelle : utilisation du pc
+
+x/x $pc
+0x804852a <main+9>:     0x082404c7
+
+======= Memory map: ========
+0804a000-0806b000 rwxp 00000000 00:00 0          [heap]
+
+Bon pas trop d'idees, allons analyser l'asm :]

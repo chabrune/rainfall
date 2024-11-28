@@ -75,3 +75,338 @@ Dump of assembler code for function m:
    0x0804851f <+43>:    leave  
    0x08048520 <+44>:    ret    
 ```
+
+# Main function
+
+`<main+0>:     push   %ebp`
+
+`<main+1>:     mov    %esp,%ebp`
+
+`<main+3>:     and    $0xfffffff0,%esp`
+
+Comme d'hab, preparation de la stack frame pour la fonction  
+
+`<main+6>:     sub    $0x20,%esp`
+
+32 bytes pour variables locales
+
+`<main+9>:  movl   $0x8,(%esp)`
+
+charge l'adresse pointe par esp a 8 (argument pour malloc)
+esp            0xbffff710 
+```
+(gdb) x/x 0xbffff710
+0xbffff710:     0x00000008
+```
+
+`<main+16>: call   0x80483f0 <malloc@plt>`
+
+Alloue 8 bytes sur la heap
+
+`<main+21>: mov    %eax,0x1c(%esp)`
+
+On charge l'adresse de retour de malloc(le pointeur sur la heap) dans esp+28
+```
+eax            0x804a008
+(gdb) x/x $esp+28
+0xbffff72c:     0x0804a008
+```
+
+`<main+25>: mov    0x1c(%esp),%eax`
+
+On remet cette adresse dans eax
+
+`C'est une pratique courante en assembleur de sauvegarder les valeurs importantes en mémoire plutôt que de compter sur la préservation des registres.`
+
+`<main+29>:    movl   $0x1,(%eax)`
+
+`<main+35>:    movl   $0x8,(%esp)`
+
+Charge la valeur 1 a l'adresse pointe par eax (0x0804a008)
+et charge l'adresse pointe par esp a 8 pour l'arg du next malloc()
+```
+x/x 0x804a008
+0x804a008:      0x00000001
+x/x $esp
+0xbffff710:     0x00000008
+```
+
+`<main+42>: call   0x80483f0 <malloc@plt>`
+
+Alloue 8 bytes sur la heap
+
+`<main+47>:    mov    %eax,%edx`
+
+charge le contenu de eax dans edx (le pointeur sur la heap)
+```
+eax            0x804a018
+edx            0x804a018
+```
+`<main+49>:    mov    0x1c(%esp),%eax`
+
+charge le contenu de esp+28 (l'adresse de retour du premier malloc(0x804a008)) dans eax
+
+`<main+53>:    mov    %edx,0x4(%eax)`
+
+charge cette adresse dans eax+4 (0x804a00c)
+```
+(gdb) x/x 0x804a00c
+0x804a00c:      0x0804a018
+```
+
+`<main+56>:    movl   $0x8,(%esp)`
+
+charge 8 dans l'adresse pointe par esp 
+```
+esp            0xbffff700 
+(gdb) x/x 0xbffff700
+0xbffff700:     0x00000008
+```
+
+`<main+63>:    call   0x80483f0 <malloc@plt>`
+
+alloue 8 bytes sur la heap
+
+`<main+68>:    mov    %eax,0x18(%esp)`
+
+charge l'adresse de retour de malloc (0x804a028) a esp+24
+```
+(gdb) x/x $esp+24
+0xbffff718:     0x0804a028
+```
+
+`<main+72>:    mov    0x18(%esp),%eax`
+
+??? purkwa fer frr
+
+`<main+76>:    movl   $0x2,(%eax)`
+
+charge la valeur 2 dans l'adresse pointee par eax (0x0804a028)
+```
+(gdb) x/x 0x0804a028
+0x804a028:      0x00000002
+```
+
+`<main+82>:    movl   $0x8,(%esp)`
+
+rebelotte charge 8 dans $esp pour next malloc
+
+`<main+89>:    call   0x80483f0 <malloc@plt>`
+
+alloue 8 bytes sur la heap
+
+`<main+94>:    mov    %eax,%edx`
+
+charge l'adresse de retour de malloc dans edx
+```
+eax            0x804a038
+edx            0x804a038
+```
+
+`<main+96>:    mov    0x18(%esp),%eax`
+
+charge l'adresse du 2e malloc (0x804a028) dans eax
+
+`<main+100>:   mov    %edx,0x4(%eax)`
+
+charge adresse du 3eme malloc (0x804a038) dans $eax+4
+
+`<main+103>:   mov    0xc(%ebp),%eax`
+`<main+106>:   add    $0x4,%eax`
+
+charge argv dans eax puis ajoute 4 pour pointer sur argv[1]
+eax            0xbffff7c4
++4
+eax            0xbffff7c8
+
+```
+ebp+0 old ebp
+ebp+4 return
+ebp+8 argc
+ebp+12 argv
+```
+
+`<main+109>:   mov    (%eax),%eax`
+
+charge l'adresse pointe par eax dans eax
+```
+eax            0xbffff7c8
+(gdb) x/x 0xbffff7c8
+0xbffff7c8:     0xbffff905
+-->
+eax            0xbffff905
+```
+
+`<main+111>:   mov    %eax,%edx`
+
+charge cette adresse dans edx
+edx            0xbffff905
+
+`<main+113>:   mov    0x1c(%esp),%eax`
+
+charge l'adresse contenu a esp+28 dans eax
+```
+(gdb) x/x $esp+28
+0xbffff71c:     0x0804a008
+eax            0x804a008
+```
+
+`<main+117>:   mov    0x4(%eax),%eax`
+
+eax            0x804a018
+
+`<main+120>:   mov    %edx,0x4(%esp)`
+
+set esp+4 (2eme arg pour strcpy) avec 0xbffff905
+
+`<main+124>:   mov    %eax,(%esp)`
+
+set esp avec (1er arg) avec 0x804a018
+
+`<main+127>:   call   0x80483e0 <strcpy@plt>`
+
+strcpy(dest, source)
+Donc copie argv[1] dans le buf pointant sur 0x804a018
+```
+x/2wx $esp
+0xbffff700:     0x0804a018      0xbffff905
+```
+
+`<main+132>:   mov    0xc(%ebp),%eax`
+
+charge eax avec argv
+
+`<main+135>:   add    $0x8,%eax`
+
+ajoute 8 bytes pour deplacer le pointeur a argv[2]
+
+`<main+138>:   mov    (%eax),%eax`
+
+eax            0xbffff908
+0xbffff908 pointeur sur argv[2]
+
+`<main+140>:   mov    %eax,%edx`
+
+charge edx avec 0xbffff908
+
+
+`<main+142>:   mov    0x18(%esp),%eax`
+
+eax            0x804a028
+adresse 3e malloc
+
+`<main+146>:   mov    0x4(%eax),%eax`
+
+(gdb) x/x $eax+4
+0x804a02c:      0x0804a038
+
+`<main+149>:   mov    %edx,0x4(%esp)`
+
+charge esp+4 avec 0xbffff908 pour arg2 strcpy
+
+`<main+153>:   mov    %eax,(%esp)`
+
+charge esp avec 0x0804a038 pour arg1 strcpy
+
+`<main+156>:   call   0x80483e0 <strcpy@plt>`
+
+strcyp(d, s) 
+copie argv[2] dans le 4e malloc
+
+`<main+161>:   mov    $0x80486e9,%edx`
+
+(gdb) x/s 0x80486e9
+0x80486e9:       "r"
+
+charge "r" dans edx
+pour l'option read
+
+`<main+166>:   mov    $0x80486eb,%eax`
+
+charge "/home/user/level8/.pass" dans eax
+
+```
+(gdb) x/s 0x80486eb
+0x80486eb:       "/home/user/level8/.pass"
+```
+
+`<main+171>:   mov    %edx,0x4(%esp)`
+
+esp+4 = r (2e arg)
+
+`<main+175>:   mov    %eax,(%esp)`
+
+esp = "/home/user/level8/.pass"
+
+`<main+178>:   call   0x8048430 <fopen@plt>`
+
+open(file, r)
+return un pointeur (*FILE) sur le fichier en cas de succes
+
+`<main+183>: mov %eax,0x8(%esp)`
+
+Place le pointeur FILE retourné par fopen comme 3ème argument pour fgets
+
+`<main+187>: movl $0x44,0x4(%esp)`
+
+Place 68 (0x44) comme 2ème argument pour fgets (taille à lire) 
+
+`<main+195>: movl $0x8049960,(%esp)`
+
+Place l'adresse du buffer comme 1er argument pour fgets 
+
+`<main+202>: call 0x80483c0 <fgets@plt>`
+
+fgets(buffer, 68, file) - Lit jusqu'a 68 caracteres du fichier
+
+`<main+207>: movl $0x8048703,(%esp)`
+
+Place une chaine de caracteres comme argument pour puts 
+```
+(gdb) x/s 0x8048703
+0x8048703:       "~~"
+```
+
+`<main+214>: call 0x8048400 <puts@plt>`
+
+Affiche la chaine 
+
+`<main+219>: mov $0x0,%eax`
+
+Place 0 comme valeur de retour
+
+
+
+# M function
+
+`<m+3>: sub $0x18,%esp`
+
+réserve 24 bytes sur la stack
+
+`<m+6>: movl $0x0,(%esp)`
+
+Place 0 comme argument pour time() 
+
+`<m+13>: call 0x80483d0 <time@plt>`
+
+Appelle time(0) pour obtenir le timestamp actuel
+
+`<m+18>: mov $0x80486e0,%edx`
+
+Charge une chaîne de format dans edx
+
+`<m+23>: mov %eax,0x8(%esp)`
+
+Place le timestamp comme 3ème argument pour printf
+
+`<m+27>: movl $0x8049960,0x4(%esp)`
+
+Place une adresse comme 2ème argument pour printf 
+
+`<m+35>: mov %edx,(%esp)`
+
+Place la chaîne de format comme 1er argument
+
+`<m+38>: call 0x80483b0 <printf@plt>`
+
+Appelle printf avec les arguments préparés 
