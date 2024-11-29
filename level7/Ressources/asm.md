@@ -399,10 +399,7 @@ Charge une chaine de format dans edx
 
 `<m+23>: mov %eax,0x8(%esp)`
 
-Place le timestamp comme 3ème argument pour printf
-
-`<m+27>: movl $0x8049960,0x4(%esp)`
-
+Place le tim0x0804a018
 Place une adresse comme 2ème argument pour printf 
 (gdb) x/s 0x8049960
 0x8049960 <c>:   ""

