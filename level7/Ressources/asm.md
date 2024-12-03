@@ -1,5 +1,5 @@
 # Main
-```
+```nasm
 Dump of assembler code for function main:
    0x08048521 <+0>:     push   %ebp
    0x08048522 <+1>:     mov    %esp,%ebp
@@ -60,7 +60,7 @@ Dump of assembler code for function main:
 ```
 
 # M
-```
+```nasm
 Dump of assembler code for function m:
    0x080484f4 <+0>:     push   %ebp
    0x080484f5 <+1>:     mov    %esp,%ebp
@@ -94,7 +94,7 @@ Comme d'hab, preparation de la stack frame pour la fonction
 
 charge l'adresse pointe par esp a 8 (argument pour malloc)
 esp            0xbffff710 
-```
+```nasm
 (gdb) x/x 0xbffff710
 0xbffff710:     0x00000008
 ```
@@ -106,7 +106,7 @@ Alloue 8 bytes sur la heap
 `<main+21>: mov    %eax,0x1c(%esp)`
 
 On charge l'adresse de retour de malloc(le pointeur sur la heap) dans esp+28
-```
+```nasm
 eax            0x804a008
 (gdb) x/x $esp+28
 0xbffff72c:     0x0804a008
@@ -124,7 +124,7 @@ On remet cette adresse dans eax
 
 Charge la valeur 1 a l'adresse pointe par eax (0x0804a008)
 et charge l'adresse pointe par esp a 8 pour l'arg du next malloc()
-```
+```nasm
 x/x 0x804a008
 0x804a008:      0x00000001
 x/x $esp
@@ -138,7 +138,7 @@ Alloue 8 bytes sur la heap
 `<main+47>:    mov    %eax,%edx`
 
 charge le contenu de eax dans edx (le pointeur sur la heap)
-```
+```nasm
 eax            0x804a018
 edx            0x804a018
 ```
@@ -149,7 +149,7 @@ charge le contenu de esp+28 (l'adresse de retour du premier malloc(0x804a008)) d
 `<main+53>:    mov    %edx,0x4(%eax)`
 
 charge cette adresse dans eax+4 (0x804a00c)
-```
+```nasm
 (gdb) x/x 0x804a00c
 0x804a00c:      0x0804a018
 ```
@@ -157,7 +157,7 @@ charge cette adresse dans eax+4 (0x804a00c)
 `<main+56>:    movl   $0x8,(%esp)`
 
 charge 8 dans l'adresse pointe par esp 
-```
+```nasm
 esp            0xbffff700 
 (gdb) x/x 0xbffff700
 0xbffff700:     0x00000008
@@ -170,7 +170,7 @@ alloue 8 bytes sur la heap
 `<main+68>:    mov    %eax,0x18(%esp)`
 
 charge l'adresse de retour de malloc (0x804a028) a esp+24
-```
+```nasm
 (gdb) x/x $esp+24
 0xbffff718:     0x0804a028
 ```
@@ -182,7 +182,7 @@ charge l'adresse de retour de malloc (0x804a028) a esp+24
 `<main+76>:    movl   $0x2,(%eax)`
 
 charge la valeur 2 dans l'adresse pointee par eax (0x0804a028)
-```
+```nasm
 (gdb) x/x 0x0804a028
 0x804a028:      0x00000002
 ```
@@ -198,7 +198,7 @@ alloue 8 bytes sur la heap
 `<main+94>:    mov    %eax,%edx`
 
 charge l'adresse de retour de malloc dans edx
-```
+```nasm
 eax            0x804a038
 edx            0x804a038
 ```
@@ -219,7 +219,7 @@ eax            0xbffff7c4
 +4
 eax            0xbffff7c8
 
-```
+```nasm
 ebp+0 old ebp
 ebp+4 return
 ebp+8 argc
@@ -229,7 +229,7 @@ ebp+12 argv
 `<main+109>:   mov    (%eax),%eax`
 
 charge l'adresse pointe par eax dans eax
-```
+```nasm
 eax            0xbffff7c8
 (gdb) x/x 0xbffff7c8
 0xbffff7c8:     0xbffff905
@@ -245,7 +245,7 @@ edx            0xbffff905
 `<main+113>:   mov    0x1c(%esp),%eax`
 
 charge l'adresse contenu a esp+28 dans eax
-```
+```nasm
 (gdb) x/x $esp+28
 0xbffff71c:     0x0804a008
 eax            0x804a008
@@ -267,7 +267,7 @@ set esp avec (1er arg) avec 0x804a018
 
 strcpy(dest, source)
 Donc copie argv[1] dans le buf pointant sur 0x804a018
-```
+```nasm
 x/2wx $esp
 0xbffff700:     0x0804a018      0xbffff905
 ```
@@ -325,7 +325,7 @@ pour l'option read
 
 charge "/home/user/level8/.pass" dans eax
 
-```
+```nasm
 (gdb) x/s 0x80486eb
 0x80486eb:       "/home/user/level8/.pass"
 ```
@@ -362,7 +362,7 @@ fgets(buffer, 68, file) - Lit jusqu'a 68 caracteres du fichier
 `<main+207>: movl $0x8048703,(%esp)`
 
 Place une chaine de caracteres comme argument pour puts 
-```
+```nasm
 (gdb) x/s 0x8048703
 0x8048703:       "~~"
 ```
