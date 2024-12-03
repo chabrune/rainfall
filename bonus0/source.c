@@ -1,16 +1,13 @@
 char* p(char* arg1, char* arg2) {
-    char buf[0x1008];  // Taille du buffer: 4104 bytes
+    char buf[0x1008];  
     
     puts(arg2);
     
-    // Lecture de l'entrée standard (fd = 0)
-    read(0, buf, 0x1000);  // Lit jusqu'à 4096 bytes
+    read(0, buf, 0x1000); // 4096
     
-    // Trouve et remplace le caractère newline par null
     char* newline = strchr(buf, '\n');
     if (newline) *newline = '\0';
     
-    // Copie au maximum 20 (0x14) caractères dans arg1
     strncpy(arg1, buf, 0x14);
     
     return arg1;
@@ -23,14 +20,11 @@ char* pp(char* arg1) {
     p(buffer1, data_80486a0);
     p(buffer2, data_80486a0);
     
-    // Copie buffer1 dans arg1
     strcpy(arg1, buffer1);
     
-    // Ajoute un espace à la fin
     size_t len = strlen(arg1);
     arg1[len] = ' ';
     
-    // Concatène buffer2 à la fin
     strcat(arg1, buffer2);
     
     return arg1;
