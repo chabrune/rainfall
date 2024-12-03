@@ -1,5 +1,7 @@
+# level9 - Analyse Assembleur Détaillée
+
 # Main
-```
+```nasm
 (gdb) disas main
 Dump of assembler code for function main:
    0x080485f4 <+0>:     push   %ebp
@@ -50,7 +52,7 @@ Dump of assembler code for function main:
 ```
 
 # N::N()
-```
+```nasm
 (gdb) disas _ZN1NC2Ei
 Dump of assembler code for function _ZN1NC2Ei:
    0x080486f6 <+0>:     push   %ebp
@@ -65,7 +67,7 @@ Dump of assembler code for function _ZN1NC2Ei:
 ```
 
 # N::setAnnotation()
-```
+```nasm
 (gdb) disas _ZN1N13setAnnotationEPc
 Dump of assembler code for function _ZN1N13setAnnotationEPc:
    0x0804870e <+0>:     push   %ebp
@@ -84,3 +86,67 @@ Dump of assembler code for function _ZN1N13setAnnotationEPc:
    0x08048738 <+42>:    leave  
    0x08048739 <+43>:    ret    
 ```
+
+
+
+## Fonction Main
+
+**Initialisation et Vérification**
+```nasm
+   0x080485f4 <+0>:     push   %ebp
+   0x080485f5 <+1>:     mov    %esp,%ebp
+   0x080485f7 <+3>:     push   %ebx
+   0x080485f8 <+4>:     and    $0xfffffff0,%esp
+   0x080485fb <+7>:     sub    $0x20,%esp
+```
+Prologue standard et allocation de 32 bytes sur la stack
+
+```nasm
+   0x080485fe <+10>:    cmpl   $0x1,0x8(%ebp)
+   0x08048602 <+14>:    jg     0x8048610 <main+28>
+```
+Vérifie si argc > 1, sinon exit(1)
+
+**Première Instance**
+```nasm
+   0x08048610 <+28>:    movl   $0x6c,(%esp)
+   0x08048617 <+35>:    call   0x8048530 <_Znwj@plt>
+```
+Allocation de 108 bytes (0x6c) avec new
+
+```nasm
+   0x0804861e <+42>:    movl   $0x5,0x4(%esp)
+   0x08048626 <+50>:    mov    %ebx,(%esp)
+   0x08048629 <+53>:    call   0x80486f6 <_ZN1NC2Ei>
+```
+Construction de l'objet N avec paramètre 5
+
+**Seconde Instance**
+```nasm
+   0x08048632 <+62>:    movl   $0x6c,(%esp)
+   0x08048639 <+69>:    call   0x8048530 <_Znwj@plt>
+```
+Allocation d'une seconde instance avec 108 bytes
+
+```nasm
+   0x08048640 <+76>:    movl   $0x6,0x4(%esp)
+   0x08048648 <+84>:    mov    %ebx,(%esp)
+   0x0804864b <+87>:    call   0x80486f6 <_ZN1NC2Ei>
+```
+Construction avec paramètre 6
+
+## Constructeur N::N()
+```nasm
+   0x080486fc <+6>:     movl   $0x8048848,(%eax)
+   0x08048702 <+12>:    mov    0x8(%ebp),%eax
+   0x08048708 <+18>:    mov    %edx,0x68(%eax)
+```
+Initialise la vtable et stocke le paramètre à offset 0x68
+
+## N::setAnnotation()
+```nasm
+   0x0804871a <+12>:    call   0x8048520 <strlen@plt>
+   0x08048733 <+37>:    call   0x8048510 <memcpy@plt>
+```
+Copie l'argument dans l'objet avec memcpy sans vérification de taille
+
