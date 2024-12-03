@@ -32,5 +32,12 @@ Rainfall est un projet d'exploitation binaire qui m'a permis d'approfondir mes c
 3. Développement de l'exploit
 4. Documentation
 
+### TO DO / FINISH
+1. Finir d'ajouter les functions ASM completes dans l'analyse
+2. Completer les walkthrough
+3. Ajouter learning.md a chaque level pour completer les analyses ?
+4. Refaire les niveaux un par un pour completer les analyses
+5. Finir les bobonus
+
 ---
 *Projet réalisé dans le cadre du cursus de l'école 42*
