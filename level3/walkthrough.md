@@ -15,6 +15,8 @@
 ## Exploitation Format String
 
 **Mécanisme**
+(voir Ressources/learning.md)
+
 - `printf()` sans arguments traite les valeurs de la pile comme arguments
 - Le formateur `%n` écrit le nombre de caractères affichés à l'adresse spécifiée
 - `%4$n` accède directement au 4ème argument sur la pile
