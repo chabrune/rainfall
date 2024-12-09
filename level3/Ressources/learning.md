@@ -13,12 +13,12 @@ syntaxe Intel
 Si on ne donne pas explicitement d'arguments variadiques apres avoir indique un format tel que %x, printf() parcours la pile dans l'ordre ce qui nous donne un acces significatif a la Pile.
 
 Exemple avec le binaire level3:
-VV
+
 `(python -c 'print "AAAA" + ".%x"*8') | ./level3`
 
 -> `AAAA.200.b7fd1ac0.b7ff37d0.41414141.2e78252e.252e7825.78252e78.2e78252e`
 
-printf() affiche notre chaine "AAAA" puis cherche les arguments affilies aux formats. Vu qu'on ne lui a pas fournis ces arguments, printf() ne contente d'afficher ce qu'il a sous la main, dans la pile.
+printf() affiche notre chaine "AAAA" puis cherche les arguments affilies aux formats. Vu qu'on ne lui a pas fournis ces arguments, printf() ce contente d'afficher ce qu'il a sous la main, dans la pile.
 Et surprise, on retrouve notre chaine "AAAA" -> "41414141".
 
 D'un autre cote, l'argument `%n` permet de stocker le nombre de caracteres lus dans un argument donne. On va donc pouvoir exploiter cette faille et changer "AAAA" par une addresse.
