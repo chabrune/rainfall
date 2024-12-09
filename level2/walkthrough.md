@@ -8,11 +8,13 @@
 - Utilisation de `strdup()` qui alloue de la mémoire dans le heap
 
 **Points Clés**
+- Utilisation d'un shellcode ?
+
+`Le shellcode de la stack/heap est une technique utilisée dans l'exploitation binaire où un attaquant écrit un shellcode dans la pile/heap d'un programme vulnérable, puis modifie le Pointeur d'Instruction (IP) ou le Pointeur d'Instruction Étendu (EIP) pour pointer vers l'emplacement de ce shellcode, le forçant à s'exécuter.`
 - Adresse de retour de `strdup()`: `0x804a008`
 - Offset du buffer overflow: 80 bytes (Pour modifier le retour de la fonction `p()` pour pointer vers notre shellcode)
 - Shellcode length: 21 bytes
 - Padding nécessaire: 59 bytes (80 - 21)
-
 - En executant la commande i f (info frame) on observe que notre saved eip est a l'adresse `0x804854a`
 
 ```nasm
