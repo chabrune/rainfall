@@ -11,6 +11,18 @@
 - `o()`: `0x080484a4`
 - `exit@plt`: `0x80483d0`
 - `exit@got.plt`: `0x8049838`
+  
+```nasm
+    (gdb) p exit
+    $2 = {<text variable, no debug info>} 0x80483d0 <exit@plt>
+    (gdb) p o
+    $1 = {<text variable, no debug info>} 0x80484a4 <o>
+
+    (gdb) x/i 0x80483d0
+    0x80483d0 <exit@plt>:        jmp    *0x8049838
+    (gdb) x/x 0x8049838
+    0x8049838 <exit@got.plt>:       0x080483d6
+```
 
 ## Stratégie d'Exploitation
 
