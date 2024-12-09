@@ -15,8 +15,8 @@ Rainfall est un projet d'exploitation binaire qui m'a permis d'approfondir mes c
 | Niveau | Vulnérabilité | Technique Utilisée |
 |--------|---------------|-------------------|
 | level0 | Integer Comparison | Exploitation d'atoi() pour obtenir un shell |
-| level1 | Buffer Overflow | Stack smashing avec shellcode |
-| level2 | Buffer Overflow | Ret2libc avec bypass de protection |
+| level1 | Buffer Overflow | Stack Buffer Overflow |
+| level2 | Buffer Overflow | Execution d'un shellcode dans la Heap via strdup |
 | level3 | Format String | Modification de variable globale |
 | level4 | Format String | Réécriture mémoire avec printf |
 | level5 | Format String | Détournement de GOT |
