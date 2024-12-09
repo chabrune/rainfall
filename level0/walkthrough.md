@@ -14,7 +14,7 @@ Le challenge nécessite une analyse du binaire avec GDB pour comprendre le méca
 Le programme effectue les opérations suivantes :
 - Conversion de l'argument en entier avec `atoi`
 - Comparaison avec la valeur `0x1a7` (423 en décimal)
-- Branchement conditionnel si les valeurs sont différentes
+- Saut vers un write("No !\n") puis return si comparaison fausse
 
 ## Exploitation
 
