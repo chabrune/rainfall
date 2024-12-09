@@ -97,7 +97,7 @@ Appel à printf avec le buffer comme format string
    0x080484df <+59>:    cmp    $0x40,%eax
    0x080484e2 <+62>:    jne    0x8048518 <v+116>
 ```
-Comparaison d'une variable globale avec 0x40 (64)
+Comparaison de la variable globale m avec 0x40 (64)
 
 ```nasm
    0x080484e4 <+64>:    mov    0x8049880,%eax
