@@ -8,7 +8,10 @@ Le niveau nécessite l'exploitation d'un buffer overflow pour rediriger l'exécu
 - La fonction `gets()` est utilisée sans vérification de taille
 - Le buffer overflow permet de réécrire l'adresse de retour (saved EIP)
 - L'adresse de `run()` est `0x8048444`
-
+```nasm
+(gdb) p run
+$2 = {<text variable, no debug info>} 0x8048444 <run>
+```
 ## Exploitation du Buffer Overflow
 
 **Localisation de l'Adresse de Retour**
