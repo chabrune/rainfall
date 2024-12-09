@@ -1,14 +1,15 @@
 Site incroyable sur PLT/GOT/Linkage/Lib 
 `https://www.segmentationfault.fr/linux/role-plt-got-ld-so/`
 
+```nasm
 (gdb) info files
-
 0x08048370 - 0x080483f0 is .plt
 0x08049814 - 0x08049818 is .got
 0x08049818 - 0x08049840 is .got.plt
+```
 
 # PLT
-```
+```nasm
 (gdb) disas 0x08048370, 0x080483f0
 Dump of assembler code from 0x8048370 to 0x80483f0:
    0x08048370:  pushl  0x804981c
