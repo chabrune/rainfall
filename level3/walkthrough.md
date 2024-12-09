@@ -6,6 +6,7 @@
 - Le `main()` appelle une fonction `v()`
 - Utilisation de `gets()` suivi d'un `printf()`
 - Variable globale `m` à l'adresse `0x804988c` dans la section .bss
+- Comparaison de cette globale avec la valeur 0x40 - si false -> return
 
 **Points Clés**
 - Adresse de la variable globale `m`: `0x804988c`
