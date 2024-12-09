@@ -14,7 +14,7 @@
 
 ## Méthodes d'Exploitation
 
-- Pour obtenir l'offset on peut envoyer des %x a fgets ou on peut envoyer 4 bytes ('AAAA') suivi de %1$x en augmentant la valeur jusqu'a retrouver les 'A'.
+- Pour obtenir l'offset on peut envoyer 'AAAA' suivi de %x a fgets ou suivi de %1$x en augmentant la valeur jusqu'a retrouver les 'A'.
 ```nasm
 ./level4 
 AAAA %x %x %x %x %x %x %x %x %x %x %x %x
