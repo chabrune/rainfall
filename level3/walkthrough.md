@@ -23,7 +23,7 @@
 
 **Construction de l'Exploit**
 1. Écriture de l'adresse de `m` au début du payload
-2. Génération de 60 caractères pour atteindre la valeur souhaitée
+2. Génération de 60 caractères ecrire la valeur souhaitée
 3. Utilisation de `%4$n` pour écrire à l'adresse de `m`
 
 ## Exploitation
