@@ -1,4 +1,4 @@
-# level2 - Exploitation du Heap via strdup()
+# level2 - Execution d'un shellcode dans la Heap via strdup()
 
 ## Analyse du Programme
 
