@@ -49,7 +49,7 @@ Apercu de la memoire:
 0x804a038:      0x00000000      0x00000000      0x00000000      0x00000000
 ```
 
-Sachant que `auth` fait un `malloc` de 4 qui sera aligne a 16 et que la prochaine allocation se fera a la suite, nous en deduisons que 16 octets suffiront pour atteindre auth[32], ainsi, la condition `auth[32] != 0` sera fausse.
+Sachant que `auth` fait un `malloc` de 4 qui sera aligne a 16 (1ere ligne) et que la prochaine allocation se fera a la suite (2eme ligne), nous en deduisons que 16 octets suffiront pour atteindre auth[32], ainsi, la condition `auth[32] != 0` sera vraie.
 
 **Obtention du Flag**
 ```bash
