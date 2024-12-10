@@ -19,8 +19,8 @@ Site incroyable sur PLT/GOT/Linkage/Lib
 ```nasm
 (gdb) disas 0x08048370, 0x080483f0
 Dump of assembler code from 0x8048370 to 0x80483f0:
-   0x08048370:  pushl  0x804981c
-   0x08048376:  jmp    *0x8049820
+   0x08048370:  pushl  0x804981c  ---> 0x804981c <_GLOBAL_OFFSET_TABLE_+4>:    0xb7fff918
+   0x08048376:  jmp    *0x8049820 ---> 0x8049820 <_GLOBAL_OFFSET_TABLE_+8>:    0xb7ff26a0
    0x0804837c:  add    %al,(%eax)
    0x0804837e:  add    %al,(%eax)
    0x08048380 <printf@plt+0>:   jmp    *0x8049824
@@ -165,7 +165,7 @@ Dump of assembler code from 0xb7ff26a0 to 0xb7ff26bc:
 
 - Elle commence par 3 push, permettant de sauvegarder des registres. Ainsi, nos deux valeurs en sommet de pile vont être décalées de 3*4 = 12 octets. Juste après ces 3 push, on a deux mov. Le premier place dans %edx une valeur située sur la pile à l’offset 0×10 soit 16 = 4 * 4 octets. Il s’agit donc de l’index de exit(), 0×28 : `edx            0x28`. Le second place dans %eax la valeur suivante, soit celle de GOT[1] : `eax            0xb7fff918`. Puis un appel de fonction a lieu.
 
-- On arrive alors dans une fonction relativement complexe, qui se situe toujours dans la section .text de ld.so. C’est elle qui est chargée d’effectuer la résolution des symbolesen recherchant dans les librairies.
+- On arrive alors dans une fonction relativement complexe, qui se situe toujours dans la section .text de ld.so. C’est elle qui est chargée d’effectuer la résolution des symboles en recherchant dans les librairies.
 
 - Continuons donc. Plaçons un breakpoint juste après le call de cette fonction, en 0xb7ff26b0
 
@@ -184,4 +184,75 @@ Breakpoint 3, 0xb7ff26b0 in ?? () from /lib/ld-linux.so.2
    0xb7ff26bb:  ret    $0xc
 ```
 
-Les instructions suivantes manipulent des registres
+- Les instructions suivantes manipulent des registres. Le mov place la valeur de %eax en sommet de pile, tandis que le ret ordonne au CPU de continuer l’exécution du code à l’adresse située sur le sommet de pile. Autrement dit, juste après le call de la fonction de résolution des symboles, on saute sur l’adresse contenue dans %eax ! Regardons ce que vaut ce registre…
+
+eax            0xb7e453e0
+
+0xb7e42f10 - 0xb7f7736c is .text in /lib/i386-linux-gnu/libc.so.6
+
+(gdb) x 0xb7e453e0
+0xb7e453e0 <__libc_start_main>: 0x53565755
+
+(gdb) p exit
+$4 = {<text variable, no debug info>} 0xb7e5ebe0 <exit>
+
+
+
+
+## Recapitulatif
+
+- 1er appel de exit : symbole non encore résolu
+
+```nasm
+0x80484ff <n+61>:    call   0x80483d0 <exit@plt> ---
+                                                   |
+                                                   |
+                                                   |
+                    <------------------------------+
+<exit@plt>
+
+0x80483d0 <exit@plt>:        jmp    *0x8049838 ---------------> 0x8049838 (<exit@got.plt>) --
+0x80483d6 <exit@plt+6>:      push   $0x28       <-------------------------------------------|
+
+0x80483db <exit@plt+11>:     jmp    0x8048370 ---------------
+                                                            |
+                                                            |
+                               <----------------------------+
+Entree 0  de la PLT
+   |
+   |
+   |
+0x8048370:   pushl  0x804981c          -----------> 0x804981c <_GLOBAL_OFFSET_TABLE_+4>:    0xb7fff918
+0x8048376:   jmp    *0x8049820         -----------> 0x8049820 <_GLOBAL_OFFSET_TABLE_+8>:    0xb7ff26a0
+                        |
+                        |
+      <-----------------+ is .text in /lib/ld-linux.so.2
+0xb7ff26a0:  push   %eax
+0xb7ff26a1:  push   %ecx
+0xb7ff26a2:  push   %edx
+0xb7ff26a3:  mov    0x10(%esp),%edx    -------------> edx 0x28 - Parametres passees a la fonction du linker correspondant a une fonction specifique
+0xb7ff26a7:  mov    0xc(%esp),%eax
+0xb7ff26ab:  call   0xb7fec1d0 -------------->  Appel de la fonction de résolution des symboles
+                                                L'adresse du symbole (exit) est placé dans %eax.
+                                                L'entrée de la .got est patchée avec cette adresse
+                  ... <----------------------   Retour de la fonction
+0xb7ff26b0:  pop    %edx
+0xb7ff26b1:  mov    (%esp),%ecx
+0xb7ff26b4:  mov    %eax,(%esp) --------------------> eax 0xb7e5ebe0 <exit> L'adresse de exit (0xb7e5ebe0) est empilée
+0xb7ff26b7:  mov    0x4(%esp),%eax
+0xb7ff26bb:  ret    $0xc         ------------------------------+  On saute sur exit
+                                                               |
+                                                               |
+0xb7e5ebe0 in exit () from /lib/i386-linux-gnu/libc.so.6 <-----+
+
+0xb7e5ebe0 <exit>:           push   %ebx
+0xb7e5ebe1 <exit+1>:         call   0xb7f56c73
+0xb7e5ebe6 <exit+6>:         add    $0x17240e,%ebx
+0xb7e5ebec <exit+12>:        sub    $0x18,%esp
+0xb7e5ebef <exit+15>:        movl   $0x1,0x8(%esp)
+0xb7e5ebf7 <exit+23>:        lea    0x3f0(%ebx),%eax
+0xb7e5ebfd <exit+29>:        mov    %eax,0x4(%esp)
+0xb7e5ec01 <exit+33>:        mov    0x20(%esp),%eax
+0xb7e5ec05 <exit+37>:        mov    %eax,(%esp)
+0xb7e5ec08 <exit+40>:        call   0xb7e5eaf0
+```
