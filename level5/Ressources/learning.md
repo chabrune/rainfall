@@ -144,3 +144,44 @@ Vérifions que le 1er pointeur correspond bien à l’entrée 1 de la GOT :
 (gdb) x/x 0x804981c
 0x804981c <_GLOBAL_OFFSET_TABLE_+4>:    0xb7fff918
 ```
+
+Revenons au code de cette fonction :
+
+```nasm
+(gdb) disas 0xb7ff26a0, 0xb7ff26a0+28
+Dump of assembler code from 0xb7ff26a0 to 0xb7ff26bc:
+   0xb7ff26a0:  push   %eax
+   0xb7ff26a1:  push   %ecx
+   0xb7ff26a2:  push   %edx
+   0xb7ff26a3:  mov    0x10(%esp),%edx
+   0xb7ff26a7:  mov    0xc(%esp),%eax
+   0xb7ff26ab:  call   0xb7fec1d0
+   0xb7ff26b0:  pop    %edx
+   0xb7ff26b1:  mov    (%esp),%ecx
+   0xb7ff26b4:  mov    %eax,(%esp)
+   0xb7ff26b7:  mov    0x4(%esp),%eax
+   0xb7ff26bb:  ret    $0xc
+```
+
+- Elle commence par 3 push, permettant de sauvegarder des registres. Ainsi, nos deux valeurs en sommet de pile vont être décalées de 3*4 = 12 octets. Juste après ces 3 push, on a deux mov. Le premier place dans %edx une valeur située sur la pile à l’offset 0×10 soit 16 = 4 * 4 octets. Il s’agit donc de l’index de exit(), 0×28 : `edx            0x28`. Le second place dans %eax la valeur suivante, soit celle de GOT[1] : `eax            0xb7fff918`. Puis un appel de fonction a lieu.
+
+- On arrive alors dans une fonction relativement complexe, qui se situe toujours dans la section .text de ld.so. C’est elle qui est chargée d’effectuer la résolution des symbolesen recherchant dans les librairies.
+
+- Continuons donc. Plaçons un breakpoint juste après le call de cette fonction, en 0xb7ff26b0
+
+```nasm
+(gdb) b *0xb7ff26b0
+
+(gdb) c
+Continuing.
+
+Breakpoint 3, 0xb7ff26b0 in ?? () from /lib/ld-linux.so.2
+
+(gdb) x/4i $pc
+=> 0xb7ff26b1:  mov    (%esp),%ecx
+   0xb7ff26b4:  mov    %eax,(%esp)
+   0xb7ff26b7:  mov    0x4(%esp),%eax
+   0xb7ff26bb:  ret    $0xc
+```
+
+Les instructions suivantes manipulent des registres
