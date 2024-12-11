@@ -186,17 +186,23 @@ Breakpoint 3, 0xb7ff26b0 in ?? () from /lib/ld-linux.so.2
 
 - Les instructions suivantes manipulent des registres. Le mov place la valeur de %eax en sommet de pile, tandis que le ret ordonne au CPU de continuer l’exécution du code à l’adresse située sur le sommet de pile. Autrement dit, juste après le call de la fonction de résolution des symboles, on saute sur l’adresse contenue dans %eax ! Regardons ce que vaut ce registre…
 
-eax            0xb7e453e0
+- eax            0xb7e5ebe0
 
 0xb7e42f10 - 0xb7f7736c is .text in /lib/i386-linux-gnu/libc.so.6
+Tiens, elle se trouve dans la .text… Par hasard, ce ne serait pas l’adresse de exit ?
 
-(gdb) x 0xb7e453e0
-0xb7e453e0 <__libc_start_main>: 0x53565755
-
+```nasm
+(gdb) x 0xb7e5ebe0
+0xb7e5ebe0 <exit>
 (gdb) p exit
 $4 = {<text variable, no debug info>} 0xb7e5ebe0 <exit>
+```
 
+Eh si ! Autrement dit, la fonction de résolution des symboles a résolu correctement exit et a placé son adresse dans %eax.
 
+- Comme on a pu le constater, chaque appel de fonction entraîne à priori une résolution de symbole, ce qui paraît fastidieux. Fort heureusement, par défaut, ld.so ne résoud pas un symbole à chaque fois qu’on tente d’y accéder, mais uniquement la 1ère fois. Par exemple, si vous avez 10 appels à exit() dans un programme, le 1er appel entraînera une résolution, et l’adresse de exit() sera gardée en mémoire pour les 9 appels suivant. C’est ce que l’on appelle l’évaluation fainéante : on ne fait que le minimum d’opération, et juste à temps.
+
+- Où et comment les adresses des symboles sont-elles gardées en mémoire une fois résolues ? Réponse : dans la GOT ! Pour le comprendre, relançons le programme et plaçons un breakpoint dans l’entrée de la PLT correspondant à exit.
 
 
 ## Recapitulatif
@@ -256,3 +262,17 @@ Entree 0  de la PLT
 0xb7e5ec05 <exit+37>:        mov    %eax,(%esp)
 0xb7e5ec08 <exit+40>:        call   0xb7e5eaf0
 ```
+
+**Résolution à l'Exécution**
+- Au démarrage du programme, la GOT contient initialement l'adresse de l'instruction suivante dans la PLT
+- Le premier appel à une fonction suit ce chemin :
+  1. Saut vers la PLT
+  2. La PLT consulte la GOT qui pointe vers le code de résolution
+  3. Le linker dynamique est appelé avec l'offset spécifique à la fonction
+  4. L'adresse résolue est sauvegardée dans la GOT
+
+**Après Résolution**
+- Les appels suivants sont directs :
+  1. Saut vers la PLT
+  2. La PLT consulte la GOT qui contient maintenant l'adresse réelle
+  3. Saut direct vers la fonction

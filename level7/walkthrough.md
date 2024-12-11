@@ -10,6 +10,8 @@
 - Adresse GOT de `puts`: `0x08049928`
 - Adresse de la fonction `m()`: `0x080484f4`
 
+0xb7ea89f0
+
 **Comportement**
 - Le programme copie les arguments dans les buffers avec `strcpy()`
 - Lecture du fichier `.pass` avec `fopen()` et `fgets()`

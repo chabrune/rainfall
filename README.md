@@ -9,7 +9,7 @@ Rainfall est un projet d'exploitation binaire qui m'a permis d'approfondir mes c
 - Compréhension approfondie de la stack et heap
 - Manipulation des registres (EIP, ESP, EBP...)
 - Analyse des segments mémoire (BSS, Data, Text...)
-- Protection binaire (ASLR, NX, Stack Canary)
+- Protection binaire (ASLR, NX, Stack Canary...)
 
 ### Techniques d'Exploitation
 | Niveau | Vulnérabilité | Technique Utilisée |
@@ -24,10 +24,14 @@ Rainfall est un projet d'exploitation binaire qui m'a permis d'approfondir mes c
 | level7 | GOT Overwrite | Détournement de fonction libc |
 | level8 | Use After Free | Exploitation de la heap |
 | level9 | C++ vtable | Exploitation d'objets C++ |
+| bonus0 | 
+| bonus1 |
+| bonus2 |
+| bonus3 |
 
 
 ### Méthodologie
-1. Analyse du binaire
+1. Analyse du binaire - Reverse
 2. Identification des vulnérabilités
 3. Développement de l'exploit
 4. Documentation
