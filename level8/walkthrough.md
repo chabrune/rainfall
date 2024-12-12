@@ -57,7 +57,6 @@ Apercu de la memoire:
 0x804a008:      0x61616161      0x0000000a      0x00000000      0x00000019
 0x804a018:      0x62626262      0x62626262      0x62626262      0x62626262
 0x804a028:      0x0000000a      0x00020fd9      0x00000000      0x00000000
-0x804a038:      0x00000000      0x00000000      0x00000000      0x00000000
 ```
 
 Sachant que `auth` fait un `malloc` de 4 qui sera aligne a 16 (1ere ligne) et que la prochaine allocation se fera a la suite (2eme ligne), nous en deduisons que 17 octets suffiront, et oui, n'oublions pas le '\n' ! auth[32] = "0x0000000a" soit '\n'.
