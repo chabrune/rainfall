@@ -1,4 +1,5 @@
-Dump of assembler code for function main:
+# Main
+```nasm
    0x08048424 <+0>:     push   %ebp
    0x08048425 <+1>:     mov    %esp,%ebp
    0x08048427 <+3>:     and    $0xfffffff0,%esp
@@ -32,4 +33,5 @@ Dump of assembler code for function main:
    0x08048499 <+117>:   call   0x8048350 <execl@plt>
    0x0804849e <+122>:   mov    $0x0,%eax
    0x080484a3 <+127>:   leave  
-   0x080484a4 <+128>:   ret    
+   0x080484a4 <+128>:   ret
+```
