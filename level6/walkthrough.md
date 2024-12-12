@@ -7,6 +7,14 @@
 - Second `malloc(4)` retourne `0x0804a050`
 - Les blocs mémoire sont contigus sur la heap
 - Header malloc de 8 bytes entre chaque allocation
+  
+```nasm
+  0x804a008:	0x41414141	0x00000000	0x00000000	0x00000000
+  0x804a018:	0x00000000	0x00000000	0x00000000	0x00000000
+  0x804a028:	0x00000000	0x00000000	0x00000000	0x00000000
+  0x804a038:	0x00000000	0x00000000	0x00000000	0x00000000
+  0x804a048:	0x00000000	0x00000011	0x08048468
+```
 
 **Fonctions Importantes**
 - Fonction `n()` à l'adresse `0x08048454` exécute `system("/bin/cat /home/user/level7/.pass")`
