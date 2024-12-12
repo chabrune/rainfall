@@ -18,7 +18,7 @@ void greetuser(void) {
         strncpy(str, "Hello ", 7);
     }
     
-    strcat(str, &str[76]); // arg_4 est à str+76 d'après le code assembleur
+    strcat(str, &str[76]); 
     puts(str);
 }
 
@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
             language = 2;
     }
     
-    memcpy(&s[76], var_38, 76);  // Copie var_38 à la fin de s
+    memcpy(&s[76], var_38, 76);
     greetuser();
     
     return 0;
