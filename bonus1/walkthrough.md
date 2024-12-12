@@ -22,11 +22,7 @@ Le programme prend deux arguments :
 **Integer Overflow**
 - La vérification `nb > 9` est effectuée
 - Un nombre négatif peut passer la vérification
-- Après multiplication par 4, le résultat peut devenir un grand nombre positif
-
-**Buffer Overflow**
-- memcpy utilise la taille calculée sans vérification
-- Permet d'écrire au-delà du buffer alloué
+- Après multiplication par 4, le résultat peut devenir un nombre positif
 
 ## Exploitation
 
@@ -34,6 +30,15 @@ Le programme prend deux arguments :
 - Valeur recherchée : -2147483632
 - En binaire : 1000 0000 0000 0000 0000 0000 0000 0011
 - Après multiplication par 4 : 0000 0000 0000 0000 0000 0000 0000 1100
+
+## Processus d'Exploitation
+
+1. Le nombre négatif passe la vérification `nb > 9`
+2. La multiplication par 4 transforme ce nombre en valeur positive
+3. memcpy copie suffisamment de données pour atteindre var_3c
+4. La valeur 0x574f4c46 est écrite à l'emplacement de var_3c
+5. La condition est validée et le shell est exécuté
+
 
 **Construction du Payload**
 ```python
@@ -46,13 +51,7 @@ Le programme prend deux arguments :
 
 **Commande d'Exploitation**
 ```bash
-./bonus1 -2147483632 $(python -c 'print "A"*40 + "\x46\x4c\x4f\x57"')
+./bonus1 "-2147483632" $(python -c 'print "A"*40 + "\x46\x4c\x4f\x57"')
 ```
 
-## Processus d'Exploitation
 
-1. Le nombre négatif passe la vérification `nb > 9`
-2. La multiplication par 4 transforme ce nombre en valeur positive
-3. memcpy copie suffisamment de données pour atteindre var_3c
-4. La valeur 0x574f4c46 est écrite à l'emplacement de var_3c
-5. La condition est validée et le shell est exécuté
