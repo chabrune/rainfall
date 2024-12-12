@@ -27,3 +27,12 @@ L'ASLR est une technique de sécurité qui randomise l'emplacement des zones mé
 - La pile (stack)
 - Le tas (heap)
 - Les bibliothèques partagées
+
+
+
+
+## Big endian/Little endian
+
+Cette caractéristique décrit dans quelle ordre sont placés les octets qui représentent un entier. Dans le mode big endian les octets de poids fort sont placés en tête et occupent donc des emplacements mémoire avec des adresses plus petites. Dans le mode little endian, les octets de poids faibles sont au contraire placés en tête. Dans le cas d'entiers de 32 bits, il existe encore des modes mixtes. Cette terminologie provient du livre Les voyages de Gulliver de J. Swift.
+
+Le mode big endian accélère les opérations qui nécessitent de regarder en premier les bits de poids forts comme la recherche du signe, la comparaison de deux entiers et la division. Au contraire le mode little endian favorise les opérations qui commencent par les bits de poids faible comme l'addition et la multiplication.
