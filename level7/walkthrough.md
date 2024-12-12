@@ -32,8 +32,10 @@
 ## Exploitation
 
 **Stratégie**
-- Utiliser le premier `strcpy()` pour écraser un pointeur avec l'adresse GOT de `puts`
+- Utiliser le premier `strcpy()` pour écraser l'addresse pointee par le 3eme `malloc()` avec l'adresse GOT de `puts` "0x8049928"
 - Utiliser le second `strcpy()` pour écrire l'adresse de `m()` dans la GOT
+
+  ↪ Grace au `strcpy()` precedent, celui-ci va donc modifier la valeur de "0x8049928" par `m()`
 - Rediriger ainsi l'exécution de `puts()` vers `m()`
 
 **Commande d'Exploitation**
