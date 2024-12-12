@@ -1,5 +1,5 @@
 # Main
-```
+```nasm
 Dump of assembler code for function main:
    0x080485a4 <+0>:     push   %ebp
    0x080485a5 <+1>:     mov    %esp,%ebp
@@ -17,7 +17,7 @@ Dump of assembler code for function main:
 ```
 
 # P
-```
+```nasm
 Dump of assembler code for function p:
    0x080484b4 <+0>:     push   %ebp
    0x080484b5 <+1>:     mov    %esp,%ebp
@@ -46,7 +46,7 @@ Dump of assembler code for function p:
 ```
 
 # PP
-```
+```nasm
 Dump of assembler code for function pp:
    0x0804851e <+0>:     push   %ebp
    0x0804851f <+1>:     mov    %esp,%ebp
