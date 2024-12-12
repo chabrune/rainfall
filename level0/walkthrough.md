@@ -1,7 +1,5 @@
 # level0 - Analyse et Exploitation
 
-Le challenge nécessite une analyse du binaire avec GDB pour comprendre le mécanisme de vérification et obtenir les privilèges du level1.
-
 ## Analyse du Programme
 
 **Observation des Instructions Clés**
