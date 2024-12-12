@@ -1,7 +1,5 @@
 # level1 - Stack Buffer Overflow
 
-Le niveau nécessite l'exploitation d'un buffer overflow pour rediriger l'exécution vers une fonction `run()` qui exécute un shell.
-
 ## Analyse du Programme
 
 **Structure de la Stack**
