@@ -44,6 +44,3 @@ Le programme prend deux arguments :
 3. memcpy copie suffisamment de données pour atteindre var_3c
 4. La valeur 0x574f4c46 est écrite à l'emplacement de var_3c
 5. La condition est validée et le shell est exécuté
-
-Citations:
-[1] https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/8881945/28258b1b-41a9-4724-96b4-9da451ac675e/paste.txt
