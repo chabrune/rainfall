@@ -24,10 +24,10 @@ Rainfall est un projet d'exploitation binaire qui m'a permis d'approfondir mes c
 | level7 | GOT Overwrite | Détournement de fonction libc |
 | level8 | Trolling | Exploitation de la heap |
 | level9 | C++ vtable | Exploitation d'objets C++ |
-| bonus0 | Buffer Overflow | Exploitation de fonction libc |
+| bonus0 | Buffer Overflow | Detournement flux via EIP |
 | bonus1 | Integer Comparison | Integer Overflow |
-| bonus2 |
-| bonus3 |
+| bonus2 | BUffer Overflow | Exploitation de fonction libc |
+| bonus3 | TROLLING | TROLLING
 
 
 ### Méthodologie
@@ -35,13 +35,6 @@ Rainfall est un projet d'exploitation binaire qui m'a permis d'approfondir mes c
 2. Identification des vulnérabilités
 3. Développement de l'exploit
 4. Documentation
-
-### TO DO / FINISH
-1. Finir d'ajouter les functions ASM completes dans l'analyse
-2. Completer les walkthrough
-3. Ajouter learning.md a chaque level pour completer les analyses ?
-4. Refaire les niveaux un par un pour completer les analyses
-5. Finir les bobonus
 
 ---
 *Projet réalisé dans le cadre du cursus de l'école 42*
