@@ -113,7 +113,7 @@ Préparation des arguments pour fwrite
 ```nasm
    0x08048507 <+99>:    call   0x80483b0 <fwrite@plt>
 ```
-Écriture d'un message
+Écriture d'un message ("Wait what?!\n")
 
 ```nasm
    0x0804850c <+104>:   movl   $0x804860d,(%esp)
