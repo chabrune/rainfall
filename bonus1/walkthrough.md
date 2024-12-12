@@ -4,6 +4,18 @@
 Le programme prend deux arguments :
 - Un nombre qui doit être inférieur à 9
 - Une chaîne de caractères qui sera copiée
+  
+- En donnant 9 a memcpy on observe que nous n'avons toujours pas assez d'espace copier pour ecraser le retour de atoi pour y mettre 0x574f4c46
+```nasm
+(gdb) x/32wx 0xbffff414
+0xbffff414:     0x41306141      0x61413161      0x33614132      0x41346141 ---> argv[2]
+0xbffff424:     0x61413561      0x37614136      0x41386141      0x62413961 ---> argv[2]
+0xbffff434:     0x31624130      0x080484b9      0x00000009
+                                                      |
+                                        atoi(9)<------+
+```
+
+- Il va falloir overflow l'int qui, apres une multiplication par 4 (decalage de 2bits a gauche) soit positif, assez grand pour overflow esp+0x3c
 
 ## Vulnérabilités
 
