@@ -26,7 +26,7 @@ Rainfall est un projet d'exploitation binaire qui m'a permis d'approfondir mes c
 | level9 | C++ vtable | Exploitation d'objets C++ |
 | bonus0 | Buffer Overflow | Detournement flux via EIP |
 | bonus1 | Integer Comparison | Integer Overflow |
-| bonus2 | Buffer Overflow | Exploitation de fonction libc |
+| bonus2 | ret2libc | Execution bin/sh via libc |
 | bonus3 | TROLLING | TROLLING |
 
 
